@@ -1,55 +1,59 @@
 const endpointsRegex = /\/merge_requests\/(\d+)\/(diffs_metadata|cached_widget)\.json/;
 
-// Store captured data
+// In-memory store
 let responses = {};
 
+// Intercept and copy response bodies
 browser.webRequest.onBeforeRequest.addListener(
   (details) => {
     const url = new URL(details.url);
     const match = url.pathname.match(endpointsRegex);
+    if (!match) return;
 
-    if (match) {
-      const mergeRequestId = match[1];
-      const endpointType = match[2];
+    const mergeRequestId = match[1];
+    const endpointType   = match[2];
 
-      const filter = browser.webRequest.filterResponseData(details.requestId);
-      let dataChunks = [];
+    const filter = browser.webRequest.filterResponseData(details.requestId);
+    const chunks = [];
 
-      filter.ondata = (event) => {
-        dataChunks.push(event.data);
-        filter.write(event.data);
-      };
+    filter.ondata = (event) => {
+      chunks.push(event.data);
+      filter.write(event.data); // pass-through to the page
+    };
 
-      filter.onstop = () => {
-        const concatenated = new Uint8Array(dataChunks.reduce((acc, val) => acc + val.byteLength, 0));
-        let offset = 0;
-        for (const chunk of dataChunks) {
-          concatenated.set(new Uint8Array(chunk), offset);
-          offset += chunk.byteLength;
+    filter.onstop = () => {
+      try {
+        const totalLen = chunks.reduce((n, a) => n + a.byteLength, 0);
+        const buf = new Uint8Array(totalLen);
+        let off = 0;
+        for (const c of chunks) {
+          buf.set(new Uint8Array(c), off);
+          off += c.byteLength;
         }
+        const text = new TextDecoder("utf-8").decode(buf);
 
-        const text = new TextDecoder("utf-8").decode(concatenated);
-        try {
-          const jsonData = JSON.parse(text);
+        const json = JSON.parse(text);
+        if (!responses[mergeRequestId]) responses[mergeRequestId] = {};
+        responses[mergeRequestId][endpointType] = json;
 
-          if (!responses[mergeRequestId]) responses[mergeRequestId] = {};
-          responses[mergeRequestId][endpointType] = jsonData;
+        console.log(`Captured MR#${mergeRequestId} - ${endpointType}`, json);
 
-          console.log(`Captured MR#${mergeRequestId} - ${endpointType}`, jsonData);
-        } catch (e) {
-          console.error("Failed to parse JSON", e);
-        }
+        // Notify any open popup to refresh
+        browser.runtime.sendMessage({ type: "responsesUpdated" }).catch(() => {});
+      } catch (e) {
+        console.error("Failed to parse intercepted JSON:", e);
+      } finally {
         filter.disconnect();
-      };
-    }
+      }
+    };
   },
   { urls: ["https://gitlabcloud.dialog.lk/*"] },
   ["blocking"]
 );
 
-// Provide responses to popup
-browser.runtime.onMessage.addListener((message) => {
-  if (message === "getResponses") {
+// Promise-based responder (Firefox 'browser.*' style)
+browser.runtime.onMessage.addListener((message, sender) => {
+  if (message && message.type === "getResponses") {
     return Promise.resolve(responses);
   }
 });
