@@ -4,27 +4,23 @@
   <meta charset="utf-8" />
   <title>GitLab Network Catcher</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 10px; width: 420px; }
-    .row { display: flex; align-items: center; justify-content: space-between; }
     button { padding: 6px 10px; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; margin-left: 6px; }
     h3 { margin: 12px 0 6px; }
     h5 { margin: 8px 0 4px; }
-    pre {
+    li {
       max-height: 260px;
-      overflow: auto;
       background: #f7f7f7;
-      padding: 10px;
+      padding: 2px;
       border-radius: 6px;
       font-size: 12px;
-      line-height: 1.4;
     }
     .muted { color: #666; font-size: 12px; }
   </style>
 </head>
 <body>
   <div class="row">
-    <h2 style="margin:0;">Captured Network Responses</h2>
     <div>
+      <button id="copyBtn" title="Copy as Markdown">Copy</button>
       <button id="clearBtn" title="Clear all data">Clear</button>
     </div>
   </div>
