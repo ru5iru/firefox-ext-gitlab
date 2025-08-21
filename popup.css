@@ -1,0 +1,254 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  width: 400px;
+  min-height: 300px;
+  background: #fafafa;
+  color: #333;
+  line-height: 1.5;
+}
+
+.header {
+  background: linear-gradient(135deg, #fc6d26, #fca326);
+  color: white;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.header .subtitle {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: white;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: 1px solid #dbdbdb;
+  border-radius: 6px;
+  background: white;
+  color: #525252;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.btn:hover {
+  background: #f9f9f9;
+  border-color: #bbb;
+}
+
+.btn.primary {
+  background: #1f75cb;
+  color: white;
+  border-color: #1f75cb;
+}
+
+.btn.primary:hover {
+  background: #1068bf;
+}
+
+.btn.success {
+  background: #108548;
+  color: white;
+  border-color: #108548;
+}
+
+.content {
+  padding: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+}
+
+.empty-state .icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.help-text {
+  font-size: 12px;
+  margin-top: 8px;
+  opacity: 0.8;
+}
+
+.mr-card {
+  background: white;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.mr-header {
+  background: #f8f9fa;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.mr-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f75cb;
+  margin-bottom: 4px;
+  word-wrap: break-word;
+}
+
+.mr-id {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.section {
+  padding: 16px;
+}
+
+.section:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 16px;
+  background: #fc6d26;
+  border-radius: 2px;
+}
+
+.commit-list, .file-list {
+  list-style: none;
+}
+
+.commit-item, .file-item {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  transition: background-color 0.2s ease;
+}
+
+.commit-item:hover, .file-item:hover {
+  background: #f1f3f4;
+}
+
+.commit-item:last-child, .file-item:last-child {
+  margin-bottom: 0;
+}
+
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.file-path {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  color: #1f2937;
+  font-weight: 500;
+  word-break: break-all;
+  flex: 1;
+  min-width: 0;
+}
+
+.file-stats {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.stat-add {
+  color: #059669;
+}
+
+.stat-remove {
+  color: #dc2626;
+}
+
+.scrollbar-custom {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 transparent;
+}
+
+.scrollbar-custom::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 3px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  margin-right: 8px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

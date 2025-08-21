@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "GitLab Network Catcher",
-  "version": "1.3",
-  "description": "Catches GitLab merge request network calls and displays their output.",
+  "version": "2.0",
+  "description": "Captures GitLab merge request network calls and displays their output with an improved modern UI.",
   "permissions": [
     "webRequest",
     "webRequestBlocking",
@@ -16,10 +16,14 @@
   },
   "browser_action": {
     "default_popup": "popup.html",
+    "default_title": "GitLab Network Catcher - View captured MR data",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     }
-  }
+  },
+  "web_accessible_resources": [
+    "popup.css"
+  ]
 }
