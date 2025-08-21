@@ -52,8 +52,14 @@ browser.webRequest.onBeforeRequest.addListener(
 );
 
 // Promise-based responder (Firefox 'browser.*' style)
-browser.runtime.onMessage.addListener((message, sender) => {
-  if (message && message.type === "getResponses") {
+browser.runtime.onMessage.addListener((msg) => {
+  if (msg.type === "getResponses") {
     return Promise.resolve(responses);
   }
+
+  if (msg.type === "clearResponses") {
+    responses = {}; // reset all captured data
+    return Promise.resolve();
+  }
 });
+
