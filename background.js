@@ -1,7 +1,7 @@
 const endpointsRegex = /\/merge_requests\/(\d+)\/(diffs_metadata|cached_widget)\.json/;
 
-// In-memory store
-let responses = {};
+// Store only latest MR
+let latestResponse = null;
 
 // Intercept and copy response bodies
 browser.webRequest.onBeforeRequest.addListener(
@@ -18,7 +18,7 @@ browser.webRequest.onBeforeRequest.addListener(
 
     filter.ondata = (event) => {
       chunks.push(event.data);
-      filter.write(event.data); // pass-through to the page
+      filter.write(event.data); // pass-through
     };
 
     filter.onstop = () => {
@@ -31,14 +31,15 @@ browser.webRequest.onBeforeRequest.addListener(
           off += c.byteLength;
         }
         const text = new TextDecoder("utf-8").decode(buf);
-
         const json = JSON.parse(text);
-        if (!responses[mergeRequestId]) responses[mergeRequestId] = {};
-        responses[mergeRequestId][endpointType] = json;
+
+        if (!latestResponse) latestResponse = {};
+        if (!latestResponse[mergeRequestId]) latestResponse[mergeRequestId] = {};
+        latestResponse[mergeRequestId][endpointType] = json;
 
         console.log(`Captured MR#${mergeRequestId} - ${endpointType}`, json);
 
-        // Notify any open popup to refresh
+        // Notify popup
         browser.runtime.sendMessage({ type: "responsesUpdated" }).catch(() => {});
       } catch (e) {
         console.error("Failed to parse intercepted JSON:", e);
@@ -51,15 +52,14 @@ browser.webRequest.onBeforeRequest.addListener(
   ["blocking"]
 );
 
-// Promise-based responder (Firefox 'browser.*' style)
+// Message responder
 browser.runtime.onMessage.addListener((msg) => {
   if (msg.type === "getResponses") {
-    return Promise.resolve(responses);
+    return Promise.resolve(latestResponse);
   }
 
   if (msg.type === "clearResponses") {
-    responses = {}; // reset all captured data
+    latestResponse = null; // clear
     return Promise.resolve();
   }
 });
-
