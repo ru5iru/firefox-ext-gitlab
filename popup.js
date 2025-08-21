@@ -10,7 +10,11 @@ function render(response) {
 
   // Only use the last MR
   const [mrId, endpoints] = Object.entries(response).pop();
-  let html = `<h3>Merge Request #${mrId}</h3>`;
+  
+  // Get MR name from cached_widget
+  const mrName = endpoints.cached_widget?.title || "Unnamed MR";
+
+  let html = `<h3>#${mrId} ${mrName}</h3>`;
 
   // Show commit messages
   if (endpoints.cached_widget && endpoints.cached_widget.commits_without_merge_commits) {
