@@ -1,0 +1,30 @@
+# Local credentials and environment overrides
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Dependency and documentation-validation caches
+node_modules/
+docs/.validation/
+.npm/
+
+# Local extension packages and browser profiles
+web-ext-artifacts/
+*.xpi
+.firefox-profile/
+
+# Logs, test output and coverage
+*.log
+coverage/
+.nyc_output/
+
+# Editor and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
